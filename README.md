@@ -40,6 +40,8 @@ To visualize weather trends clearly and interactively, the dashboard uses [Syncf
 The Syncfusion [SfCircularProgressBar](https://help.syncfusion.com/maui-toolkit/circularprogressbar/getting-started) control provides an elegant way to display current weather conditions such as temperature, wind speed, and precipitation in a circular format, with animated, theme-aware progress indicators that effectively communicate data intensity and context.
 
 ## Output
+![LiveWeatherDashboard](https://github.com/user-attachments/assets/cdfe0034-23db-4993-810a-8c60c634eaef)
+
 
 ## Troubleshooting
 #### Path too long exception
