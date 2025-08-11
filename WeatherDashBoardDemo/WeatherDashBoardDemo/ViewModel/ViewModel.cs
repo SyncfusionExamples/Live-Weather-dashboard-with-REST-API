@@ -12,7 +12,7 @@ namespace WeatherDashBoardDemo
     {
         #region Private Fields
 
-        private Model selectedCountry;
+        private Model? selectedCountry;
         private double dailyTemperature;
         private double dailyWindSpeed;
         private double dailyPrecipitation;
@@ -22,7 +22,7 @@ namespace WeatherDashBoardDemo
         #region Public Properties
 
         public ObservableCollection<Model> CountriesDetail { get; set; }
-        public Model SelectedCountry
+        public Model? SelectedCountry
         {
             get => selectedCountry;
             set
@@ -81,7 +81,7 @@ namespace WeatherDashBoardDemo
                 {
                     string? line = reader.ReadLine();
                     var data = line.Split(',');
-                    // Format: Country,Lattitude,Longitude
+                    // Format: Country,Latitude,Longitude
                     if (data.Length >= 3 &&
                         double.TryParse(data[1], NumberStyles.Any, CultureInfo.InvariantCulture, out double lat) &&
                         double.TryParse(data[2], NumberStyles.Any, CultureInfo.InvariantCulture, out double lon))
@@ -100,17 +100,17 @@ namespace WeatherDashBoardDemo
         /// Fetches weather data from Open-Meteo API for the specified country
         /// </summary>
         /// <param name="country"></param>
-        private async void FetchWeatherData(Model country)
+        private async void FetchWeatherData(Model? country)
         {
             
             if (country == null)
                 return;
 
             string url = $"https://api.open-meteo.com/v1/forecast" +
-                $"?latitude={country.Lattitude.ToString(CultureInfo.InvariantCulture)}" +
-                $"&longitude={country.Longtitude.ToString(CultureInfo.InvariantCulture)}" +
-                "&daily=temperature_2m_mean,precipitation_probability_mean,wind_speed_10m_mean" +
-                "&hourly=temperature_2m" +
+                $"?latitude={country.Latitude.ToString(CultureInfo.InvariantCulture)}" +
+                $"&Longitude={country.Longitude.ToString(CultureInfo.InvariantCulture)}" +
+                "&DailyTemp=Temperature_2m_mean,Precipitation_probability_mean,Wind_speed_10m_mean" +
+                "&HourlyTemp=Temperature_2m" +
                 "&timezone=auto&forecast_days=7";
 
             try
@@ -122,28 +122,28 @@ namespace WeatherDashBoardDemo
                     var json = await response.Content.ReadAsStringAsync();
                     var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
                     var data = JsonSerializer.Deserialize<WeatherData>(json, options);
-                    if (data != null && data.daily != null && data.hourly != null)
+                    if (data != null && data.DailyTemp != null && data.HourlyTemp != null)
                     {
                         //Current Weather metrics
-                        DailyTemperature = data.daily.temperature_2m_mean?.Count > 0 ? data.daily.temperature_2m_mean[0] : 0;
-                        DailyWindSpeed = data.daily.wind_speed_10m_mean?.Count > 0 ? data.daily.wind_speed_10m_mean[0] : 0;
-                        DailyPrecipitation = data.daily.precipitation_probability_mean?.Count > 0 ? data.daily.precipitation_probability_mean[0] : 0;
+                        DailyTemperature = data.DailyTemp.Temperature_2m_mean?.Count > 0 ? data.DailyTemp.Temperature_2m_mean[0] : 0;
+                        DailyWindSpeed = data.DailyTemp.Wind_speed_10m_mean?.Count > 0 ? data.DailyTemp.Wind_speed_10m_mean[0] : 0;
+                        DailyPrecipitation = data.DailyTemp.Precipitation_probability_mean?.Count > 0 ? data.DailyTemp.Precipitation_probability_mean[0] : 0;
 
                         // Temperature Forcast
                         HourlyTemperatures.Clear();
-                        if (data.hourly?.temperature_2m != null && data.hourly?.time != null)
+                        if (data.HourlyTemp?.Temperature_2m != null && data.HourlyTemp?.Time != null)
                         {
                             DateTime now = DateTime.Now;
-                            int max = Math.Min(168, data.hourly.temperature_2m.Count);
+                            int max = Math.Min(168, data.HourlyTemp.Temperature_2m.Count);
 
                             for (int i = 0; i < max; i++)
                             {
-                                if (DateTime.TryParse(data.hourly.time[i], out DateTime hTime))
+                                if (DateTime.TryParse(data.HourlyTemp.Time[i], out DateTime hTime))
                                 {
                                     HourlyTemperatures.Add(new HourlyTemperatureData
                                     {
                                         Time = hTime,
-                                        Temperature = data.hourly.temperature_2m[i]
+                                        Temperature = data.HourlyTemp.Temperature_2m[i]
                                     });
                                 }
                             }
