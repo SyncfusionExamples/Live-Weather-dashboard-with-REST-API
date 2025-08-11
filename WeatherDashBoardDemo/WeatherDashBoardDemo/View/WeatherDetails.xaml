@@ -148,8 +148,7 @@
                                  EnableAnimation="True"
                                  EnableTooltip="True"
                                  TooltipTemplate="{StaticResource tooltipTemplate}"
-                                 StrokeWidth="4"
-                                          />
+                                 StrokeWidth="4" />
 
                         <chart:LineSeries ItemsSource="{Binding ForecastTemperatures}"
                                          XBindingPath="Time"

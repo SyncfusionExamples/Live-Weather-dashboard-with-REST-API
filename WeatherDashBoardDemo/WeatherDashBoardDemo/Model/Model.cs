@@ -1,4 +1,6 @@
-﻿namespace WeatherDashBoardDemo
+﻿using System.Text.Json.Serialization;
+
+namespace WeatherDashBoardDemo
 {
     public class Model
     {
@@ -13,22 +15,31 @@
         }
     }
 
-    public class WeatherData
+    internal class WeatherData
     {
+        [JsonPropertyName("daily")]
         public Daily? DailyTemp { get; set; }
+
+        [JsonPropertyName("hourly")]
         public Hourly? HourlyTemp { get; set; }
     }
-    public class Daily
+    internal class Daily
     {
-        public List<string>? Time { get; set; }
-        public List<double>? Temperature_2m_mean { get; set; }
-        public List<double>? Precipitation_probability_mean { get; set; }
-        public List<double>? Wind_speed_10m_mean { get; set; }
+        [JsonPropertyName("temperature_2m_mean")]
+        public List<double>? TemperatureMean { get; set; }
+
+        [JsonPropertyName("precipitation_probability_mean")]
+        public List<double>? PrecipitationMean { get; set; }
+
+        [JsonPropertyName("wind_speed_10m_mean")]
+        public List<double>? WindSpeedMean { get; set; }
     }
-    public class Hourly
+    internal class Hourly
     {
         public List<string>? Time { get; set; }
-        public List<double>? Temperature_2m { get; set; }
+
+        [JsonPropertyName("temperature_2m")]
+        public List<double>? Temperature { get; set; }
     }
 
     public class HourlyTemperatureData

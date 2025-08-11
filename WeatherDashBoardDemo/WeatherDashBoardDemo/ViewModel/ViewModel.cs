@@ -107,12 +107,11 @@ namespace WeatherDashBoardDemo
                 return;
 
             string url = $"https://api.open-meteo.com/v1/forecast" +
-                $"?latitude={country.Latitude.ToString(CultureInfo.InvariantCulture)}" +
-                $"&Longitude={country.Longitude.ToString(CultureInfo.InvariantCulture)}" +
-                "&DailyTemp=Temperature_2m_mean,Precipitation_probability_mean,Wind_speed_10m_mean" +
-                "&HourlyTemp=Temperature_2m" +
-                "&timezone=auto&forecast_days=7";
-
+              $"?latitude={country.Latitude.ToString(CultureInfo.InvariantCulture)}" +
+              $"&longitude={country.Longitude.ToString(CultureInfo.InvariantCulture)}" +
+              "&daily=temperature_2m_mean,precipitation_probability_mean,wind_speed_10m_mean" +
+              "&hourly=temperature_2m" +
+              "&timezone=auto&forecast_days=7";
             try
             {
                 using HttpClient client = new();
@@ -125,16 +124,16 @@ namespace WeatherDashBoardDemo
                     if (data != null && data.DailyTemp != null && data.HourlyTemp != null)
                     {
                         //Current Weather metrics
-                        DailyTemperature = data.DailyTemp.Temperature_2m_mean?.Count > 0 ? data.DailyTemp.Temperature_2m_mean[0] : 0;
-                        DailyWindSpeed = data.DailyTemp.Wind_speed_10m_mean?.Count > 0 ? data.DailyTemp.Wind_speed_10m_mean[0] : 0;
-                        DailyPrecipitation = data.DailyTemp.Precipitation_probability_mean?.Count > 0 ? data.DailyTemp.Precipitation_probability_mean[0] : 0;
+                        DailyTemperature = data.DailyTemp.TemperatureMean?.Count > 0 ? data.DailyTemp.TemperatureMean[0] : 0;
+                        DailyWindSpeed = data.DailyTemp.WindSpeedMean?.Count > 0 ? data.DailyTemp.WindSpeedMean[0] : 0;
+                        DailyPrecipitation = data.DailyTemp.PrecipitationMean?.Count > 0 ? data.DailyTemp.PrecipitationMean[0] : 0;
 
                         // Temperature Forcast
                         HourlyTemperatures.Clear();
-                        if (data.HourlyTemp?.Temperature_2m != null && data.HourlyTemp?.Time != null)
+                        if (data.HourlyTemp?.Temperature != null && data.HourlyTemp?.Time != null)
                         {
                             DateTime now = DateTime.Now;
-                            int max = Math.Min(168, data.HourlyTemp.Temperature_2m.Count);
+                            int max = Math.Min(168, data.HourlyTemp.Temperature.Count);
 
                             for (int i = 0; i < max; i++)
                             {
@@ -143,7 +142,7 @@ namespace WeatherDashBoardDemo
                                     HourlyTemperatures.Add(new HourlyTemperatureData
                                     {
                                         Time = hTime,
-                                        Temperature = data.HourlyTemp.Temperature_2m[i]
+                                        Temperature = data.HourlyTemp.Temperature[i]
                                     });
                                 }
                             }
