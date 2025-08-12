@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:comboBox="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
+             xmlns:progressBar="clr-namespace:Syncfusion.Maui.Toolkit.ProgressBar;assembly=Syncfusion.Maui.Toolkit"
+             xmlns:chart="clr-namespace:Syncfusion.Maui.Toolkit.Charts;assembly=Syncfusion.Maui.Toolkit"
+             xmlns:local="clr-namespace:WeatherDashBoardDemo"
+             x:Class="WeatherDashBoardDemo.WeatherDetails"
+             Background="{AppThemeBinding Light='#F5F9FF', Dark='#18191A'}">
+
+    <ContentPage.BindingContext>
+        <local:WeatherViewModel/>
+    </ContentPage.BindingContext>
+
+
+    <Border Margin="{OnPlatform Default=10, iOS=15}"
+          Padding="18"
+          Background="{AppThemeBinding Light='#F7F2FB', Dark='#1C1B1F'}"
+          Stroke="{AppThemeBinding Light='#00C9A7', Dark='#00C9A7'}"
+          StrokeThickness="2"
+          StrokeShape="RoundRectangle 14">
+        <Border.Shadow>
+            <Shadow Brush="{AppThemeBinding Light='#21212122', Dark='#00000088'}"
+              Offset="0,5"
+              Radius="12"/>
+        </Border.Shadow>
+
+        <Grid RowDefinitions="Auto,*" RowSpacing="18">
+            <!-- Header Section -->
+            <Grid ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto" Padding="0,0,0,8">
+                <Label Text="Live Weather Dashboard"
+                       FontSize="28"
+                       FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light='#1E293B', Dark='White'}"/>
+                <Label Text="Explore detailed real-time weather statistics, engaging charts, and stay ahead with a 7-day forecast tailored for chosen country."
+                       TextColor="{AppThemeBinding Light='#5C6E87', Dark='#BFC9CA'}"
+                       Grid.Row="1"
+                       Grid.Column="0"
+                       FontSize="14"/>
+                <HorizontalStackLayout Spacing="10"
+                               Grid.RowSpan="2"
+                               Grid.Column="1"
+                               VerticalOptions="Center">
+                    <Label Text="Country:"
+                           TextColor="{AppThemeBinding Light='#374151', Dark='#E0E0E0'}"
+                           FontSize="15"
+                           VerticalOptions="Center"/>
+                    
+                    <!--Country Selection section-->
+                    <comboBox:SfComboBox WidthRequest="145"
+                                 HeightRequest="38"
+                                 Background="{AppThemeBinding Light='White', Dark='#2A2D3E'}"
+                                 TextColor="{AppThemeBinding Light='#1F2937', Dark='White'}"
+                                 ItemsSource="{Binding CountriesDetail}"
+                                 IsClearButtonVisible="False"
+                                 DropDownBackground="{AppThemeBinding Light='White', Dark='#302D38'}"
+                                 DisplayMemberPath="CountryName"
+                                 DropDownItemTextColor="{AppThemeBinding Light='#1F2937', Dark='White'}"
+                                 DropDownIconColor="{AppThemeBinding Light='Black',Dark='White'}"
+                                 SelectedItem="{Binding SelectedCountry}"
+                                 SelectedIndex="0"
+                                 ShowBorder="False"/>
+                </HorizontalStackLayout>
+                
+                <Button Margin="10,0,0,0"
+                        Grid.RowSpan="2"
+                        Grid.Column="2"
+                        Text="Change Theme"
+                        TextColor="{AppThemeBinding Light='White', Dark='Black'}"
+                        FontSize="13"
+                        Padding="12,6"
+                        WidthRequest="130"
+                        HeightRequest="40"
+                        Background="#00C9A7"
+                        BorderColor="{AppThemeBinding Light='#00C9A7', Dark='#3C3F4F'}"
+                        BorderWidth="1"
+                        CornerRadius="10"
+                        Clicked="Button_Clicked"/>
+            </Grid>
+
+            <!-- Chart and Cards Section -->
+            <Grid Grid.Row="1" ColumnDefinitions="*,260" ColumnSpacing="10">
+                <!-- Chart Section -->
+                <Border Grid.Column="0" Background="{AppThemeBinding Light='#FFFBFE', Dark='#302D38'}"
+                        StrokeShape="RoundRectangle 16"
+                        Padding="12"
+                        StrokeThickness="1"
+                        Stroke="{AppThemeBinding Light='#E5E7EB', Dark='#393A47'}">
+                    <chart:SfCartesianChart BackgroundColor="{AppThemeBinding Light='#FFFBFE', Dark='#302D38'}"
+                                Margin="0">
+                    <chart:SfCartesianChart.Resources>
+                        <DataTemplate x:Key="tooltipTemplate">
+                            <StackLayout Orientation="Vertical" Padding="5">
+                                <Label Text="{Binding Item.Time, StringFormat='{0:dd MMM hh:mm tt}'}"
+                               TextColor="{AppThemeBinding Light='White',Dark='Black'}"
+                               FontAttributes="Bold"
+                               FontSize="12"
+                               HorizontalOptions="Center"/>
+                                <Label Text="{Binding Item.Temperature, StringFormat='Temp: {0}°C'}"
+                               TextColor="{AppThemeBinding Light='White',Dark='Black'}"
+                               FontAttributes="Bold"
+                               FontSize="12"
+                               HorizontalOptions="Center"/>
+                            </StackLayout>
+                        </DataTemplate>
+                    </chart:SfCartesianChart.Resources>
+
+                    <chart:SfCartesianChart.Title>
+                        <Label Text="Temperature Forecast"
+                       FontSize="20"
+                       TextColor="{AppThemeBinding Light='#1E293B', Dark='White'}"
+                        FontAttributes="Bold"
+                       HorizontalOptions="Center"/>
+                    </chart:SfCartesianChart.Title>
+
+                    <chart:SfCartesianChart.XAxes>
+                        <chart:DateTimeAxis IntervalType="Days" Interval="1" ShowMajorGridLines="False">
+                            <chart:DateTimeAxis.LabelStyle>
+                                <chart:ChartAxisLabelStyle LabelFormat="dd-MMM"
+                                                   TextColor="{AppThemeBinding Light='#222', Dark='#C1CCDE'}"/>
+                            </chart:DateTimeAxis.LabelStyle>
+                        </chart:DateTimeAxis>
+                    </chart:SfCartesianChart.XAxes>
+
+                    <chart:SfCartesianChart.YAxes>
+                        <chart:NumericalAxis Interval="5" ShowMajorGridLines="False">
+                            <chart:NumericalAxis.Title>
+                                <chart:ChartAxisTitle Text="Temperature (°C)"
+                                                      TextColor="{AppThemeBinding Light='#252525', Dark='#AEB4BF'}"/>
+                            </chart:NumericalAxis.Title>
+                                <chart:NumericalAxis.LabelStyle>
+                                    <chart:ChartAxisLabelStyle TextColor="{AppThemeBinding Light='#252525', Dark='#AEB4BF'}"/>
+                                </chart:NumericalAxis.LabelStyle>
+                        </chart:NumericalAxis>
+                    </chart:SfCartesianChart.YAxes>
+                        
+                        <chart:SfCartesianChart.ZoomPanBehavior>
+                            <chart:ChartZoomPanBehavior EnablePanning="True"/>
+                        </chart:SfCartesianChart.ZoomPanBehavior>
+
+                        <chart:SfCartesianChart.TooltipBehavior>
+                            <chart:ChartTooltipBehavior Background="{AppThemeBinding Light='Black', Dark='White'}"/>
+                        </chart:SfCartesianChart.TooltipBehavior>
+
+                        <chart:LineSeries ItemsSource="{Binding CurrentTemperatures}"
+                                 XBindingPath="Time"
+                                 YBindingPath="Temperature"
+                                 EnableAnimation="True"
+                                 EnableTooltip="True"
+                                 TooltipTemplate="{StaticResource tooltipTemplate}"
+                                 StrokeWidth="4" />
+
+                        <chart:LineSeries ItemsSource="{Binding ForecastTemperatures}"
+                                         XBindingPath="Time"
+                                         YBindingPath="Temperature"
+                                         EnableTooltip="True"
+                                         EnableAnimation="True"
+                                         TooltipTemplate="{StaticResource tooltipTemplate}"
+                                         StrokeWidth="2"
+                                         Fill="{AppThemeBinding Light='#7B8B9D', Dark='#68C1F2'}"
+                                         StrokeDashArray="{AppThemeBinding Light='8,3', Dark='4,2,4'}"/>
+                      </chart:SfCartesianChart>
+                </Border>
+
+                <!-- Weather Metric Cards -->
+                <Border Grid.Column="1"
+                        Background="{AppThemeBinding Light='#FFFBFE', Dark='#302D38'}"
+                        StrokeShape="RoundRectangle 16"
+                        Padding="12"
+                        StrokeThickness="1"
+                        Stroke="{AppThemeBinding Light='#E5E7EB', Dark='#393A47'}">
+                    <ScrollView>
+                        <VerticalStackLayout Spacing="14" Padding="0">
+                        <Label Text="Current Weather Metrics"
+                               TextColor="{AppThemeBinding Light='#1E293B', Dark='White'}"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"/>
+                       
+                        <!-- Temperature -->
+                            <progressBar:SfCircularProgressBar WidthRequest="{OnPlatform Default=135,MacCatalyst=235}" HeightRequest="{OnPlatform Default=135,MacCatalyst=235}"
+                                                   Progress="{Binding DailyTemperature}"
+                                                   Maximum="50"
+                                                   TrackFill="{AppThemeBinding Light='#C0F1EC', Dark='#495662'}"
+                                                   ProgressFill="{AppThemeBinding Light='#00C9A7', Dark='#00C9A7'}"
+                                                   TrackThickness="0.2"
+                                                   ProgressThickness="0.2"
+                                                   ThicknessUnit="Factor"
+                                                   AnimationEasing="{x:Static Easing.CubicInOut}">
+                            <progressBar:SfCircularProgressBar.Content>
+                                <VerticalStackLayout>
+                                    <Label Text="Temperature"
+                                   TextColor="{AppThemeBinding Light='#5C6E87', Dark='#BFC9CA'}"
+                                   FontSize="13"/>
+                                    <Label Text="{Binding DailyTemperature, StringFormat='{0}°C'}"
+                                   TextColor="{AppThemeBinding Light='#262626', Dark='#D0D0D0'}"
+                                   FontAttributes="Bold"
+                                   FontSize="16"
+                                   HorizontalOptions="Center"/>
+                                </VerticalStackLayout>
+                            </progressBar:SfCircularProgressBar.Content>
+                        </progressBar:SfCircularProgressBar>
+
+                        <!-- Wind Speed -->
+                            <progressBar:SfCircularProgressBar WidthRequest="{OnPlatform Default=135,MacCatalyst=235}" HeightRequest="{OnPlatform Default=135,MacCatalyst=235}"
+                            Progress="{Binding DailyWindSpeed}"
+                            Maximum="50"
+                            TrackFill="{AppThemeBinding Light='#C0F1EC', Dark='#495662'}"
+                            ProgressFill="{AppThemeBinding Light='#00C9A7', Dark='#00C9A7'}"
+                            TrackThickness="0.2"
+                            ProgressThickness="0.2"
+                            ThicknessUnit="Factor"
+                            AnimationEasing="{x:Static Easing.CubicInOut}">
+                            <progressBar:SfCircularProgressBar.Content>
+                                <VerticalStackLayout>
+                                    <Label Text="WindSpeed"
+                                        TextColor="{AppThemeBinding Light='#5C6E87', Dark='#BFC9CA'}"
+                                        FontSize="13"/>
+                                    <Label Text="{Binding DailyWindSpeed, StringFormat='{0}km/h'}"
+                                            TextColor="{AppThemeBinding Light='#262626', Dark='#D0D0D0'}"
+                                            FontAttributes="Bold"
+                                            FontSize="14"
+                                            HorizontalOptions="Center"/>
+                                </VerticalStackLayout>
+                            </progressBar:SfCircularProgressBar.Content>
+                        </progressBar:SfCircularProgressBar>
+
+                        <!-- Precipitation -->
+                            <progressBar:SfCircularProgressBar WidthRequest="{OnPlatform Default=135,MacCatalyst=235}" HeightRequest="{OnPlatform Default=135,MacCatalyst=235}"
+                                                   Progress="{Binding DailyPrecipitation}"
+                                                   Maximum="100"
+                                                   TrackFill="{AppThemeBinding Light='#C0F1EC', Dark='#495662'}"
+                                                   ProgressFill="{AppThemeBinding Light='#00C9A7', Dark='#00C9A7'}"
+                                                   BackgroundColor="Transparent"
+                                                   TrackThickness="0.2"
+                                                   ProgressThickness="0.2"
+                                                   ThicknessUnit="Factor"
+                                                   AnimationEasing="{x:Static Easing.CubicInOut}">
+                                <progressBar:SfCircularProgressBar.Content>
+                                    <VerticalStackLayout>
+                                        <Label Text="Precipitation"
+                                   TextColor="{AppThemeBinding Light='#5C6E87', Dark='#BFC9CA'}"
+                                   FontSize="13"/>
+                                        <Label Text="{Binding DailyPrecipitation, StringFormat='{0}%'}"
+                                   TextColor="{AppThemeBinding Light='#262626', Dark='#D0D0D0'}"
+                                   FontAttributes="Bold"
+                                   FontSize="16"
+                                   HorizontalOptions="Center"/>
+                                    </VerticalStackLayout>
+                                </progressBar:SfCircularProgressBar.Content>
+                            </progressBar:SfCircularProgressBar>
+                        </VerticalStackLayout>
+                    </ScrollView>
+                </Border>
+            </Grid>
+        </Grid>
+
+    </Border>
+</ContentPage>
+
+
