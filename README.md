@@ -47,4 +47,4 @@ The Syncfusion [SfCircularProgressBar](https://help.syncfusion.com/maui-toolkit/
 #### Path too long exception
 If you are facing path too long exception when building this example project, close Visual Studio and rename the repository to short and build the project.
 
-For a step-by-step procedure, refer to the [Creating a Live Weather Dashboard with REST API Using Syncfusion MAUI Toolkit Controls]() blog post.
+For a step-by-step procedure, refer to the [Creating a Live Weather Dashboard with REST API Using Syncfusion MAUI Toolkit Controls](https://www.syncfusion.com/blogs/post/rest-api-weather-dashboard-dotnet-maui) blog post.
